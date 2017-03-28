@@ -47,8 +47,8 @@ Temporary Items
 .apdisk
 
 #Cordova
-plugins
+plugins/
+cordova-js-src/
 .project
 cordova.js
 cordova_plugins.js
-cordova-js-src
