@@ -364,7 +364,7 @@ function SalirResp(tx, results, esquema) {
 		
 	if (esquemaSql ==esquema){
 		$("#estado_envio").html('');
-		console.log('Cargue Exitoso');
+		console.log('Esquema Final!!');
 	}	
 }
 

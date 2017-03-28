@@ -1,6 +1,4 @@
-/** * @author DGJP * @Fecha 2013-08 */
-$(window).load(function () {	db.transaction(BuscaUsuarioLogueado);
-});
+/** * @author DGJP * @Fecha 2013-08 */$(window).on('load', function() {	db.transaction(BuscaUsuarioLogueado);});
 $(document).ready(function(){
 	$("#btn-login").click(function() {		$("#equivocado").text('Espere por favor...');		var usr = $("#login").val();		var pas = $("#password").val();		if (usr== ""){			$("#equivocado").text('Digite usuario por favor');			$("#login").focus();			return false;		}
 		if (pas== ""){			$("#equivocado").text('Digite clave por favor');			$("#password").focus();			return false;		}		$("#equivocado").text('Espere por favor...');
