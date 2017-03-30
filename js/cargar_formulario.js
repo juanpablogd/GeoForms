@@ -2,7 +2,7 @@
  * @author DGPJ 20130902
  */
 var db = window.openDatabase("bdgeoforms", "1.0", "Proyecto Formularios", 134217728 );
-var id;
+var id,id_interval;
 var vertical;
 var esquema;
 
@@ -86,19 +86,35 @@ $(document).ready(function(){
 	// CARGAR MENU DE LA BASE DE DATOS
 	db.transaction(ConsultaItems); 
 	
-	//INTERVALO DE TIEMPO PARA CARGAR LA INFORMACIÓN EN EL SERVIDOR
-	setInterval(function(){
-		console.log("Consulta para SINCRONIZAR");
-		db.transaction(ConsultaSincronizar);
-	}, 15000); 
+	function intervalSincronizar() {	//INTERVALO DE TIEMPO PARA CARGAR LA INFORMACIÓN EN EL SERVIDOR
+	  return setInterval(function(){
+			console.log("Consulta para SINCRONIZAR");
+			db.transaction(ConsultaSincronizar);
+		}, 15000);
+	};
+	function onOnline() {
+	    // Handle the online event
+	    var networkState = navigator.connection.type;	console.log('Connection type: ' + networkState);
+	    if (networkState !== Connection.NONE && networkState !== Connection.UNKNOWN) {
+	    		db.transaction(ConsultaSincronizar);
+	            id_interval = intervalSincronizar();
+	    }
+	    //display('Connection type: ' + networkState);
+	}
+	function onOffline() {
+	    // Handle the offline event
+	    window.clearInterval(id_interval);
+	    console.log("lost connection");
+	}
+	document.addEventListener("online", onOnline, false);
+	document.addEventListener("offline", onOffline, false);
+ 
 	
 	setInterval(function(){
 		console.log("Consulta de elementos pendientes");
 		db.transaction(Consulta);
 	}, 5000); 	
-	
-	
-	db.transaction(ConsultaSincronizar);
+
 	db.transaction(Consulta); 
 	
 });

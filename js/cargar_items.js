@@ -37,6 +37,36 @@ function msj_peligro(msj){
 			}
 		);
 }
+function scanea(idTxt){
+	cordova.plugins.barcodeScanner.scan(
+	      function (result) {
+	      	if (!result.cancelled){
+	      		$("#"+idTxt+"").val(result.text);
+	      		$("#"+idTxt+"").prop('disabled', true);
+	      	}else{
+	      		$("#"+idTxt+"").prop('disabled', false);
+	      	}
+	      	
+			console.log("We got a barcode\n" +
+	                "Result: " + result.text + "\n" +
+	                "Format: " + result.format + "\n" +
+	                "Cancelled: " + result.cancelled);
+	      }, 
+	      function (error) {
+	          console.log("Scanning failed: " + error);
+	          $("#"+idTxt+"").prop('disabled', false);
+	      },
+	      {
+	          preferFrontCamera : false, // iOS and Android
+	          showFlipCameraButton : true, // iOS and Android
+	          showTorchButton : true, // iOS and Android
+	          torchOn: false, // Android, launch with the torch switched on (if available)
+	          prompt : "Ubique el código dentro del cuadro", // Android
+	          resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+	      }
+	   );
+	
+}
 /*
 function SeleccionItems(tx) {
 	//console.log('select id_item from '+esquema+'p_items_adicional where id_rta = "'+localStorage.id_rta+'"');
@@ -157,8 +187,10 @@ function ConsultaItemsCarga(tx, results) {
 				$("#num_preguntas").html(parseInt(num_actual) + 1);	
 			}
 			if(results.rows.item(i).valor != null) { $('#f'+id_item).append('<input type="checkbox" name="'+id_item+'" id="'+id_item+'" value="'+results.rows.item(i).valor+'" visible="true"> '+results.rows.item(i).descripcion+'<br>'); }	
+		}else if (rta == "LECTOR" && id_item_last != id_item) {
+			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+'</label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' visible="true" disabled="true"/><button onclick="scanea('+id_item+')" id="btn_scanea'+id_item+'" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> Escanear <span class="glyphicon glyphicon-qrcode"></span></button></div>');	/* $('#'+id_item).textinput(); */
+			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}
-		
 		if((i+1)==len){		//DESPUES DE CARGAR TODOS LOS REGISTROS
 			// OCULTAR ITEMS
 			db.transaction(OcultarItems);
@@ -185,7 +217,7 @@ function ConsultaItemsCarga(tx, results) {
 
 /****************************************************************************************************************************************************************/
 /**OCULTAR ITEMS POR DEFECTO******OCULTAR ITEMS POR DEFECTO******OCULTAR ITEMS POR DEFECTO******OCULTAR ITEMS POR DEFECTO******OCULTAR ITEMS POR DEFECTO******OCULTAR ITEMS POR DEFECTO*****/ 
-function OcultarItems(tx) { console.log('SELECT iadd.id_item FROM '+esquema+'p_items_formulario itemfor inner join '+esquema+'p_items_adicional iadd on itemfor.id_item = iadd.id_item where id_categoria = "'+id_categoria+'" order by iadd.id_item desc');
+function OcultarItems(tx) { //console.log('SELECT iadd.id_item FROM '+esquema+'p_items_formulario itemfor inner join '+esquema+'p_items_adicional iadd on itemfor.id_item = iadd.id_item where id_categoria = "'+id_categoria+'" order by iadd.id_item desc');
 	
 	tx.executeSql('SELECT iadd.id_item FROM '+esquema+'p_items_formulario itemfor inner join '+esquema+'p_items_adicional iadd on itemfor.id_item = iadd.id_item where id_categoria = "'+id_categoria+'" order by iadd.id_item desc', [], OcultartemsResult,errorCB);
 }

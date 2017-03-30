@@ -10,7 +10,7 @@ function descargar()
 {
 	cargando = true;
 		$("#loading").addClass("cargando");
-
+		console.log('http://'+localStorage.url_servidor+'/SIG/servicios/actualizar_parametros.php?id_usuario='+id_usuario);
 		$.ajax({
 			url:'http://'+localStorage.url_servidor+'/SIG/servicios/actualizar_parametros.php?id_usuario='+id_usuario,
 			dataType: 'json',

@@ -34,11 +34,6 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-		getAppVersion(function(version) {
-			$("#version").html('Sistema GeoForms versión: ' + version);
-		    console.log('Native App Version: ' + version);
-		});
-        
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
