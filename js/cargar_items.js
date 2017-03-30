@@ -436,32 +436,8 @@ $(document).ready(function(){
 	   		db.transaction(GuardarItemsExe);
 		}
 	});
-	
 	$("[id*=salir]").click(function() {
-		bootbox.dialog({
-		  message: " ¿Está seguro que desea salir sin guardar cambios?",
-		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoForms - Guardar",
-		  buttons: {
-		    success: {
-		      label: "Si",
-		      className: "btn-success",
-		      callback: function() {
-					if(asignado=="t"){	//si es asignado
-						window.location = "mapa/mobile-jq.html";
-					}else{
-						window.location = "principal.html";
-					}
-		      }
-		    },
-		    main: {
-		      label: "No",
-		      className: "btn-primary",
-		      callback: function() {
-		        
-		      }
-		    }
-		  }
-		});
+		app.salir();
 	});
 
 	$("#id_geometria").change(function() {
