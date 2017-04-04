@@ -143,6 +143,7 @@ function seleccionItemsFiltrarResult(tx, results) {
 		    }
 		}else if(tipoElem=="SPAN"){
 			$('#'+id_select).html(results.rows.item(0).descripcion);
+			setTimeout(function(){ $('#'+id_select).html(" "); }, 5*1000);
 		}
  	}
  }
