@@ -43,6 +43,12 @@ function scanea(idTxt){
 	      	if (!result.cancelled){
 	      		$("#"+idTxt+"").val(result.text);
 	      		$("#"+idTxt+"").prop('disabled', true);
+				//VALOR RESPUESTA
+				localStorage.tmp_id_item_vr = result.text;
+				// VALOR ID ITEM A MOSTRAR
+				localStorage.tmp_id_item = idTxt;
+				// CARGAR form_guardar DE LA BASE DE DATOS
+				db.transaction(SeleccionItemsFiltrar);
 	      	}else{
 	      		$("#"+idTxt+"").prop('disabled', false);
 	      	}
@@ -119,21 +125,46 @@ function SeleccionItemsOcultarResult(tx, results) {
    	}
    
 }
+function SeleccionItemsFiltrar(tx) {	console.log('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo from '+esquema+'p_items_filtro itf inner join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre = "'+localStorage.tmp_id_item_vr+'" order by rs.descripcion');
+ 	tx.executeSql('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo from '+esquema+'p_items_filtro itf inner join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre = "'+localStorage.tmp_id_item_vr+'" order by rs.descripcion', [], seleccionItemsFiltrarResult,errorCB);
+}
+
+function seleccionItemsFiltrarResult(tx, results) {
+ 	var len = results.rows.length;	//console.log(len);
+ 	var id_select;	
+ 	if(len > 0){
+ 		id_select = results.rows.item(0).id_item_hijo;
+		var tipoElem = $('#'+id_select)[0].nodeName.toUpperCase();	console.log(tipoElem);
+		if(tipoElem=="SELECT"){
+	 		$('#'+id_select).find('option').remove().end();		
+	 		$('#'+id_select).append('<option value="">---Seleccione---</option>');
+		 	for (i = 0; i < len; i++){
+		 		$('#'+id_select).append('<option value="'+results.rows.item(i).valor+'@'+results.rows.item(i).id_add+'">'+results.rows.item(i).descripcion+'</option>');
+		    }
+		}else if(tipoElem=="SPAN"){
+			$('#'+id_select).html(results.rows.item(0).descripcion);
+		}
+ 	}
+ }
 
 function getval(sel) {
 	console.log("Id: "+sel.id);
 	var res = sel.value.split("@");
-	// VALOR FINAL A GUARDAR
+	//VALOR RESPUESTA
+	var tmp_id_item_vr = res[0];
+	// VALOR ID RESPUESTA
 	var tmp_id_rta = res[1];
-	// VALOR FINAL A GUARDAR
+	// VALOR ID ITEM A MOSTRAR
 	var tmp_id_item = res[2];
 	//Variable Global como localStorage
 	localStorage.tmp_id_item = sel.id;
 	localStorage.tmp_id_rta = tmp_id_rta;
-	console.log("ORIGEN Id rta: " + localStorage.tmp_id_item + " - " + localStorage.tmp_id_rta);
-	
-	// CARGAR ITEMS DE LA BASE DE DATOS
+	localStorage.tmp_id_item_vr = tmp_id_item_vr;
+	console.log("ORIGEN  Id item: " + localStorage.tmp_id_item + " - Id rta: " + localStorage.tmp_id_rta + " - Vr: " + localStorage.tmp_id_item_vr);
+	// CARGAR form_guardar DE LA BASE DE DATOS
 	db.transaction(SeleccionItemsOcultar);
+	// CARGAR form_guardar DE LA BASE DE DATOS
+	db.transaction(SeleccionItemsFiltrar);
 }
     
 /****************************************************************************************************************************************************************/
@@ -146,7 +177,7 @@ function errorCB(err) {
 /****************************************************************************************************************************************************************/
 /**CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS**/ 
 function ConsultaItems(tx) {
-	//console.log('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)');
+	console.log('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)');
 	tx.executeSql('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)', [], ConsultaItemsCarga,errorCB);
 }
 function ConsultaItemsCarga(tx, results) {
@@ -190,6 +221,8 @@ function ConsultaItemsCarga(tx, results) {
 		}else if (rta == "LECTOR" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+'</label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' visible="true" disabled="true"/><button onclick="scanea('+id_item+')" id="btn_scanea'+id_item+'" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> Escanear <span class="glyphicon glyphicon-qrcode"></span></button></div>');	/* $('#'+id_item).textinput(); */
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
+		}else if (rta == "INFO" && id_item_last != id_item) {
+			$("#items").append('<div id="f'+id_item+'" class="form-group "><span name="'+id_item+'" id="'+id_item+'" class="label label-info">'+descripcion_item+'</span></div>');	/* $('#'+id_item).textinput(); */
 		}
 		if((i+1)==len){		//DESPUES DE CARGAR TODOS LOS REGISTROS
 			// OCULTAR ITEMS
