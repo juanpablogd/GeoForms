@@ -9,10 +9,10 @@ var esquema;
 //CONTROL DE ERRORES
 function errorCB(err) {
 	if (err.code == undefined && err.message == undefined){
-		alerta("GeoForms","Descargue formularios pendientes!","Ok","descargar.html");
+		alerta("GeoData","Descargue formularios pendientes!","Ok","descargar.html");
 	}else
 	{
-		alerta("GeoForms","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
+		alerta("GeoData","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
 	}
 }
 
@@ -27,7 +27,7 @@ function ConsultaItems(tx) {
 function ConsultaItemsCarga(tx, results) {
 	var len = results.rows.length;
 	if(len == 0){
-		alerta("GeoForms","No hay Formularios asignados","Ok","descargar.html");
+		alerta("GeoData","No hay Formularios asignados","Ok","descargar.html");
 	}else{
 		$("#items").html('');	
 		for (i = 0; i < len; i++){

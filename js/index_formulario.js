@@ -38,7 +38,7 @@ var app = {
     salir: function() {
 		bootbox.dialog({
 		  message: " ¿Está seguro que desea salir sin guardar cambios?",
-		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoForms - Guardar",
+		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoData - Guardar",
 		  buttons: {
 		    success: {
 		      label: "Si",

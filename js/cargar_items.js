@@ -125,8 +125,8 @@ function SeleccionItemsOcultarResult(tx, results) {
    	}
    
 }
-function SeleccionItemsFiltrar(tx) {	console.log('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo from '+esquema+'p_items_filtro itf inner join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre = "'+localStorage.tmp_id_item_vr+'" order by rs.descripcion');
- 	tx.executeSql('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo from '+esquema+'p_items_filtro itf inner join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre = "'+localStorage.tmp_id_item_vr+'" order by rs.descripcion', [], seleccionItemsFiltrarResult,errorCB);
+function SeleccionItemsFiltrar(tx) {	console.log('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo,vr_padre from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" order by rs.descripcion');
+ 	tx.executeSql('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo,vr_padre from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" order by rs.descripcion', [], seleccionItemsFiltrarResult,errorCB);
 }
 
 function seleccionItemsFiltrarResult(tx, results) {
@@ -139,11 +139,11 @@ function seleccionItemsFiltrarResult(tx, results) {
 	 		$('#'+id_select).find('option').remove().end();		
 	 		$('#'+id_select).append('<option value="">---Seleccione---</option>');
 		 	for (i = 0; i < len; i++){
-		 		$('#'+id_select).append('<option value="'+results.rows.item(i).valor+'@'+results.rows.item(i).id_add+'">'+results.rows.item(i).descripcion+'</option>');
+		 		if(results.rows.item(i).vr_padre == localStorage.tmp_id_item_vr) $('#'+id_select).append('<option value="'+results.rows.item(i).valor+'@'+results.rows.item(i).id_add+'">'+results.rows.item(i).descripcion+'</option>');
 		    }
 		}else if(tipoElem=="SPAN"){
-			$('#'+id_select).html(results.rows.item(0).descripcion);
-			setTimeout(function(){ $('#'+id_select).html(" "); }, 5*1000);
+			if(results.rows.item(0).vr_padre==localStorage.tmp_id_item_vr) $('#'+id_select).html(results.rows.item(0).descripcion);
+			else $('#'+id_select).html('No se encontró descripción!');
 		}
  	}
  }
@@ -404,9 +404,9 @@ function GuardarItemsExe(tx) {
 	localStorage.geometria="";
 	console.log("Almacenamiento Exitoso");
 	if(asignado=="t"){	//si es asignado
-		alerta("GeoForms - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
+		alerta("GeoData - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
 	}else{
-		alerta("GeoForms - Guardar","Información Guardada exitosamente","Ok","principal.html");
+		alerta("GeoData - Guardar","Información Guardada exitosamente","Ok","principal.html");
 	}
 
 }

@@ -59,12 +59,12 @@ function descargar()
 						TablaGuardar();
 				}else{
 					$("#loading").removeClass("cargando");
-					alerta("GeoForms","No hay Actualizaciones pendientes","Ok","#");
+					alerta("GeoData","No hay Actualizaciones pendientes","Ok","#");
 				}
 			},
 			error: function (error) {
 					$("#loading").removeClass("cargando");
-					alerta("GeoForms","No hay conexión en el servidor Principal","Ok","principal.html");
+					alerta("GeoData","No hay conexión en el servidor Principal","Ok","principal.html");
             }
 		});
 }
@@ -101,7 +101,7 @@ function descargar_cartografia()
 										catch(err)
 										  {
 											$.mobile.loading( 'hide' );
-											alerta("GeoForms","El espacio ha sido completado en su totalidad","Ok","principal.html");
+											alerta("GeoData","El espacio ha sido completado en su totalidad","Ok","principal.html");
 											return false;
 										  }*/
 										  
@@ -144,16 +144,16 @@ function descargar_cartografia()
 							} 
 						}
 						//LOCALSTORAGE $.mobile.loading( 'hide' );
-						//LOCALSTORAGE alerta("GeoForms","Actualización exitosa","Ok","principal.html");
+						//LOCALSTORAGE alerta("GeoData","Actualización exitosa","Ok","principal.html");
 						TablaGuardar_cartografia();
 				}else{
 					$("#loading").removeClass("loading");
-					alerta("GeoForms","No hay Actualizaciones pendientes","Ok","#");
+					alerta("GeoData","No hay Actualizaciones pendientes","Ok","#");
 				}
 			},
 			error: function (error) {
 					$("#loading").removeClass("loading");
-					alerta("GeoForms","No hay conexión en el servidor Principal","Ok","principal.html");
+					alerta("GeoData","No hay conexión en el servidor Principal","Ok","principal.html");
 
             }
 		});
@@ -182,7 +182,7 @@ function ConsultaFotos(tx, results) {
 		//$("#estado_info").html('<span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Información pendiente por cargar&nbsp;<span class="glyphicon glyphicon-cloud-upload"></span>');
 		$("#btn_si").hide();
 		$("#txt_pregunta").hide();
-		alerta("GeoForms","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
+		alerta("GeoData","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
 		
 	}
 }
@@ -193,7 +193,7 @@ function ConsultaVideos(tx, results) {
 		//$("#estado_info").html('<span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Información pendiente por cargar&nbsp;<span class="glyphicon glyphicon-cloud-upload"></span>');
 		$("#btn_si").hide();
 		$("#txt_pregunta").hide();
-		alerta("GeoForms","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
+		alerta("GeoData","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
 	}
 }
 //CONSULTA ASIGNACIÓN
@@ -202,7 +202,7 @@ function ConsultaAsignacion(tx, results) {
 		//$("#estado_info").html('<span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Información pendiente por cargar&nbsp;<span class="glyphicon glyphicon-cloud-upload"></span>');
 		$("#btn_si").hide();
 		$("#txt_pregunta").hide();
-		alerta("GeoForms","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
+		alerta("GeoData","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
 	}
 }
 //CONSULTA ASIGNACIÓN
@@ -211,7 +211,7 @@ function ConsultaResp(tx, results) {
 		//$("#estado_info").html('<span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;Información pendiente por cargar&nbsp;<span class="glyphicon glyphicon-cloud-upload"></span>');
 		$("#btn_si").hide();
 		$("#txt_pregunta").hide();
-		alerta("GeoForms","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
+		alerta("GeoData","Debe Enviar la información Pendiente antes de Descargar","Ok","cargar.html");
 	}
 }
 
