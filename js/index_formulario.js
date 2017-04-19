@@ -36,6 +36,7 @@ var app = {
         console.log('Received Event: ' + id);
     },
     salir: function() {
+        bootbox.hideAll();
 		bootbox.dialog({
 		  message: " ¿Está seguro que desea salir sin guardar cambios?",
 		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoData - Guardar",

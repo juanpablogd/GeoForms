@@ -134,7 +134,7 @@ function seleccionItemsFiltrarResult(tx, results) {
  	var id_select;	
  	if(len > 0){
  		id_select = results.rows.item(0).id_item_hijo;
-		var tipoElem = $('#'+id_select)[0].nodeName.toUpperCase();	console.log(tipoElem);
+		var tipoElem = $('#'+id_select)[0].nodeName.toUpperCase();	console.log(tipoElem + ": " + id_select);
 		if(tipoElem=="SELECT"){
 	 		$('#'+id_select).find('option').remove().end();		
 	 		$('#'+id_select).append('<option value="">---Seleccione---</option>');
@@ -142,11 +142,26 @@ function seleccionItemsFiltrarResult(tx, results) {
 		 		if(results.rows.item(i).vr_padre == localStorage.tmp_id_item_vr) $('#'+id_select).append('<option value="'+results.rows.item(i).valor+'@'+results.rows.item(i).id_add+'">'+results.rows.item(i).descripcion+'</option>');
 		    }
 		}else if(tipoElem=="SPAN"){
-			if(results.rows.item(0).vr_padre==localStorage.tmp_id_item_vr) $('#'+id_select).html(results.rows.item(0).descripcion);
-			else $('#'+id_select).html('No se encontró descripción!');
+		    localStorage.id_select = id_select;
+		    $('#'+id_select).html('');
+			db.transaction(SeleccionItemsFiltrarNomb);
+/*            for (i = 0; i < len; i++){
+                if(results.rows.item(i).vr_padre==localStorage.tmp_id_item_vr) $('#'+id_select).html(results.rows.item(i).descripcion);
+            }   */
 		}
  	}
  }
+
+ function SeleccionItemsFiltrarNomb(tx) {	console.log('select rs.descripcion from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre ="'+localStorage.tmp_id_item_vr+'" order by rs.descripcion');
+  	tx.executeSql('select rs.descripcion from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" and vr_padre ="'+localStorage.tmp_id_item_vr+'" order by rs.descripcion', [], SeleccionItemsFiltrarNombResult,errorCB);
+ }
+ function SeleccionItemsFiltrarNombResult(tx, results) {
+    console.log(results.rows.length);
+    if(results.rows.length > 0){
+        $('#'+localStorage.id_select).html(results.rows.item(0).descripcion);
+    }else $('#'+localStorage.id_select).html('No se encontró descripción!');
+ }
+
 
 function getval(sel) {
 	console.log("Id: "+sel.id);
@@ -178,11 +193,11 @@ function errorCB(err) {
 /****************************************************************************************************************************************************************/
 /**CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS****CARGAR ITEMS**/ 
 function ConsultaItems(tx) {
-	console.log('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)');
-	tx.executeSql('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)', [], ConsultaItemsCarga,errorCB);
+	console.log('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item and valor != "" where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)');
+	tx.executeSql('select it.id_item, it.descripcion_item, it.tipo_rta, it.obligatorio,rt.descripcion,rt.valor,rt.id id_add  from '+esquema+'p_items_formulario it left join '+esquema+'p_rtas_seleccion rt on it.id_item = rt.id_item and valor != "" where id_categoria="'+id_categoria+'" order by CAST(orden as integer),CAST(it.id_item as integer)', [], ConsultaItemsCarga,errorCB);
 }
 function ConsultaItemsCarga(tx, results) {
-	var len = results.rows.length;	//alert(len);
+	var len = results.rows.length;	console.log(len);
 
 	for (i = 0; i < len; i++){
 		
@@ -192,7 +207,7 @@ function ConsultaItemsCarga(tx, results) {
 		var rta = results.rows.item(i).tipo_rta;
 		var id_item = results.rows.item(i).id_item;
 		var descripcion_item = results.rows.item(i).descripcion_item; var descripcion_item = descripcion_item.replace(/&lt;/g, "<");var descripcion_item = descripcion_item.replace(/&gt;/g, ">");
-		var obligatorio = ""; console.log(results.rows.item(i).obligatorio.trim());
+		var obligatorio = ""; //console.log(results.rows.item(i).obligatorio.trim());
 		if(results.rows.item(i).obligatorio.trim() == "S") {obligatorio = "required";}
 
 		if (rta == "TEXTO" && id_item_last != id_item){
