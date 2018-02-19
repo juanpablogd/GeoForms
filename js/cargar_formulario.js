@@ -31,7 +31,7 @@ function ConsultaItemsCarga(tx, results) {
 	}else{
 		$("#items").html('');	
 		for (i = 0; i < len; i++){
-			tx.executeSql('select distinct id,categoria,"'+results.rows.item(i).esquema+'" as esquema,"'+results.rows.item(i).vertical+'" as vertical,foto_calidad,foto_tamano,geolocaliza_obligatorio,foto_obligatorio,video_obligatorio,geometria_obligatorio,tipo_geometria from '+results.rows.item(i).esquema+'p_categorias order by categoria', [], ConsultaItemsCargaAsignResp,errorCB);
+			tx.executeSql('select distinct id,categoria,"'+results.rows.item(i).esquema+'" as esquema,"'+results.rows.item(i).vertical+'" as vertical,foto_calidad,foto_tamano,geolocaliza_obligatorio,foto_obligatorio,video_obligatorio,geometria_obligatorio,tipo_geometria,foto_max from '+results.rows.item(i).esquema+'p_categorias order by categoria', [], ConsultaItemsCargaAsignResp,errorCB);
 	   	}
 	   	
 	}
@@ -51,7 +51,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var categoria = resultsV.rows.item(i).categoria;
 		var foto_calidad = resultsV.rows.item(i).foto_calidad;
 		var foto_tamano = resultsV.rows.item(i).foto_tamano;
-		$("#items").append('<a href="#" class="list-group-item" id ="'+id_categoria+'@'+resultsV.rows.item(i).esquema+'@'+foto_calidad+'@'+foto_tamano+'@'+resultsV.rows.item(i).geolocaliza_obligatorio+'@'+resultsV.rows.item(i).foto_obligatorio+'@'+resultsV.rows.item(i).video_obligatorio+'@'+resultsV.rows.item(i).geometria_obligatorio+'@'+resultsV.rows.item(i).tipo_geometria+'"><span class="glyphicon glyphicon-check azul"></span>'+resultsV.rows.item(i).vertical+'-'+categoria+'</a>');
+		$("#items").append('<a href="#" class="list-group-item" id ="'+id_categoria+'@'+resultsV.rows.item(i).esquema+'@'+foto_calidad+'@'+foto_tamano+'@'+resultsV.rows.item(i).geolocaliza_obligatorio+'@'+resultsV.rows.item(i).foto_obligatorio+'@'+resultsV.rows.item(i).video_obligatorio+'@'+resultsV.rows.item(i).geometria_obligatorio+'@'+resultsV.rows.item(i).tipo_geometria+'@'+resultsV.rows.item(i).foto_max+'"><span class="glyphicon glyphicon-check azul"></span>'+resultsV.rows.item(i).vertical+'-'+categoria+'</a>');
 
 		//(0)idcategoria@(1)esquema@(2)foto_calidad@(3)foto_tamaño@(4)geObligatorio@(5)fotObligatorio@(6)videObligatorio@(7)GeometriaObligatorio@(8)tipo_Geometria	//Ej: 2@inventarios@100@1280@S@S@N@N@POLIGONO
 		//$("#notificacion").hide();
@@ -71,6 +71,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 	    localStorage.video_obligatorio = n[6];
 	    localStorage.geometria_obligatorio = n[7];
 	    localStorage.tipo_geometria = n[8];				console.log(localStorage.tipo_geometria);
+	    localStorage.foto_max = n[9];				console.log(localStorage.tipo_geometria);
 	    
 	    localStorage.nombre_form = $(this).text();
 		localStorage.asignado = "f"; 		//False (No asignado)
